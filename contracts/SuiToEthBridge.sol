@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.9;
 
 import "hardhat/console.sol";
 
+// import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+
+// contract SuiToEthBridge is Initializable {
 contract SuiToEthBridge {
     uint16 public constant MAX_TOTAL_WEIGHT = 10000;
     uint256 public constant MAX_SINGLE_VALIDATOR_WEIGHT = 1000;
@@ -29,29 +32,35 @@ contract SuiToEthBridge {
     State public bridgeState;
 
     // address public immutable owner;
-    address public immutable owner;
 
-    // modifier to check if caller is owner
-    modifier isOwner() {
-        // If the first argument of 'require' evaluates to 'false', execution terminates and all
-        // changes to the state and to Ether balances are reverted.
-        // This used to consume all gas in old EVM versions, but not anymore.
-        // It is often a good idea to use 'require' to check if functions are called correctly.
-        // As a second argument, you can also provide an explanation about what went wrong.
-        require(msg.sender == owner, "Caller is not owner");
-        _;
-    }
+    // // modifier to check if caller is owner
+    // modifier isOwner() {
+    //     // If the first argument of 'require' evaluates to 'false', execution terminates and all
+    //     // changes to the state and to Ether balances are reverted.
+    //     // This used to consume all gas in old EVM versions, but not anymore.
+    //     // It is often a good idea to use 'require' to check if functions are called correctly.
+    //     // As a second argument, you can also provide an explanation about what went wrong.
+    //     require(msg.sender == owner, "Caller is not owner");
+    //     _;
+    // }
 
-    function stopRunning() public isOwner {
-        bridgeState = State.Stopped;
-    }
+    // function stopRunning() public isOwner {
+    //     bridgeState = State.Stopped;
+    // }
 
-    /**
-     * @dev Set contract deployer as owner
-     */
-    constructor(address firstPK, uint256 firstWeight) {
+    // // /**
+    // //  * @dev Set contract deployer as owner
+    // //  */
+    // constructor(address firstPK, uint256 firstWeight) {
+    //     console.log("Owner contract deployed by:", msg.sender);
+    //     owner = msg.sender; // 'msg.sender' is sender of current call, contract deployer for a constructor
+    //     addValidator(firstPK, firstWeight);
+    //     bridgeState = State.Running;
+    // }
+
+    function initialize(address firstPK, uint256 firstWeight) public {
         console.log("Owner contract deployed by:", msg.sender);
-        owner = msg.sender; // 'msg.sender' is sender of current call, contract deployer for a constructor
+        // owner = msg.sender; // 'msg.sender' is sender of current call, contract deployer for a constructor
         addValidator(firstPK, firstWeight);
         bridgeState = State.Running;
     }
@@ -211,6 +220,7 @@ contract SuiToEthBridge {
         return false;
     }
 
+    // Check also weight. i.e. no more than 33% of the total weight
     // A function to add a validator
     function addValidator(address _pk, uint256 _weight) private {
         // Check if the address is not zero
