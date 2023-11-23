@@ -232,4 +232,8 @@ contract SuiToEthBridge {
         // Update the validator index
         validatorIndex[_pk] = validators.length;
     }
+
+    function validatorsCount() public view returns (uint count) {
+        return validators.length;
+    }
 }
