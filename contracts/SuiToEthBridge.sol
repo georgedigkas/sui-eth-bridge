@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.20;
 
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
 // import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
@@ -235,5 +237,16 @@ contract SuiToEthBridge {
 
     function validatorsCount() public view returns (uint count) {
         return validators.length;
+    }
+
+    function verifyNew(
+        string memory message,
+        bytes memory signature
+    ) external pure returns (address, ECDSA.RecoverError, bytes32) {
+        bytes32 signedMessageHash = MessageHashUtils.toEthSignedMessageHash(
+            bytes(message)
+        );
+
+        return ECDSA.tryRecover(signedMessageHash, signature);
     }
 }

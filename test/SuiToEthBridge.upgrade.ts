@@ -17,7 +17,7 @@ describe("SuiToEthBridge", function () {
     it("retrieve returns a value previously stored", async function () {
       const { s2e } = await loadFixture(beforeEach);
 
-      await s2e.initialize("0x94926b0accee21e61ee900592a039a1075758014", 1000);
+      await s2e.initialize("0x94926b0accee21e61ee900592a039a1075758014", 10000);
 
       // Test if the returned value is the same one
       // Note that we need to use strings to compare the 256 bit integers
